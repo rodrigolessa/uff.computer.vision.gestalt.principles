@@ -142,17 +142,11 @@ cv2.waitKey(0)
 # D(x, y)   = 1, if |K x,y| > Tau1
 #           = 0, if else
 
-# TODO: APLICAR TRANFROMADA DE HOUGH
-
 ######################################################
 # C - Virtual Edge Generation
 
 ######################################################
 # D - Object Constrution
 
-# Debugging: Show the original image and the interest area
-#debug1 = np.hstack((img, blur, hsv))
 
-#cv2.imshow("HSV Image", debug1)
-#cv2.waitKey(0)
 cv2.destroyAllWindows()
