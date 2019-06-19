@@ -29,3 +29,11 @@ B - Key Vertex Detection
 C - Virtual Edge Generation
 
 D - Object Constrution
+
+## Bibliografia:
+Decomposition and Construction of Object Based on Law of Closure in Gestalt Psychology
+Yi-Chong Zeng
+Data Analytics Technology and Applications Research Institute
+Institute for Information Industry
+Taipei, Taiwan
+yichongzeng@iii.org.tw
