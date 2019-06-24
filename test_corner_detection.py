@@ -62,9 +62,9 @@ R = np.zeros(IMG_hsv_value.shape, dtype = "uint64")
 
 # Loop for each pixel
 #for xRows = 1:x
-for xRows in x:
+for xRows in range(0, x - 1):
     #for yColumns = 1:y  
-    for yColumns in y:
+    for yColumns in range(0, y - 1):
         #M = [A(xRows, yColumns), C(xRows, yColumns); C(xRows, yColumns), B(xRows, yColumns)];   % get M at each pixel
         # https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.matrix.html
         M = np.matrix([[A[xRows, yColumns], C[xRows, yColumns]], [C[xRows, yColumns], B[xRows, yColumns]]])
@@ -84,9 +84,9 @@ IMG_result = IMG.copy()
 IMG_map = np.zeros(IMG_hsv_value.shape, dtype = "uint64")
 
 #for xRows = 1:x
-for xRows in x:
+for xRows in range(0, x - 1):
     #for yColumns = 1:y
-    for yColumns in y:
+    for yColumns in range(0, y - 1):
         #if ((R(xRows, yColumns) > Threshold))               % For those corner response R larger than Threshold
         if R[xRows, yColumns] > Threshold:
         	#IMG_result(xRows, yColumns, :) = [0, 0, 255];   % Mark corner point by blue
