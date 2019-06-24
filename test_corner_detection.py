@@ -18,8 +18,13 @@ IMG = cv2.imread('referencias\\stars.jpg')
 
 #IMG_hsv_value = IMG_hsv(:,:,3);             % gray scale value
 IMG_hsv_value = cv2.cvtColor(IMG, cv2.COLOR_BGR2GRAY)
+
+print('open image')
+
 #[Ix, Iy] = gradient(IMG_hsv_value);         % Shifts
 Ix, Iy = np.gradient(IMG_hsv_value)
+
+print('gradient')
 
 #Ix2 = Ix.^2;
 Ix2 = np.square(Ix)
@@ -28,12 +33,16 @@ Iy2 = np.square(Iy)
 #Ixy = Ix.*Iy;
 Ixy = np.multiply(Ix, Iy)
 
+print('multiply square of gradient')
+
 # Window Function
 windowsize = 3*sigma
 #[Wx, Wy] = meshgrid(-windowsize : windowsize, -windowsize : windowsize);
 Wx, Wy = np.meshgrid(list(range(-windowsize, windowsize)), list(range(-windowsize, windowsize)))
 #w = exp(-(Wx .^2 + Wy .^2) / (2 * sigma ^ 2))
 w = np.exp(-(np.square(Wx) + np.square(Wy)) / (2 * sigma ** 2))
+
+print('meshgrid')
 
 # Convolutions
 #A = conv2(w, Ix2);
@@ -44,8 +53,10 @@ B = signal.convolve2d(w, Iy2)
 #C = conv2(w, Ixy);
 C = signal.convolve2d(w, Ixy)
 
+print('convolve 2D meshgrid')
+
 #[x,y] = size(IMG_hsv_value);            % x,y is the width and length of the image
-x, y = IMG_hsv_value.shape()
+(x, y) = IMG_hsv_value.shape
 #R = zeros(x, y);                        % Initialize Corner response R
 R = np.zeros(IMG_hsv_value.shape, dtype = "uint64")
 
@@ -64,6 +75,8 @@ for xRows in x:
         R[xRows, yColumns] = np.linalg.det(M) - k * (np.trace(M) ** 2)
     #end
 #end
+
+print('Matrix M')
 
 #IMG_result = IMG;
 IMG_result = IMG.copy()
