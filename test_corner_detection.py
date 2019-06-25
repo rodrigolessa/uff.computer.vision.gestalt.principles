@@ -90,7 +90,7 @@ for xRows in range(0, x - 1):
         #if ((R(xRows, yColumns) > Threshold))               % For those corner response R larger than Threshold
         if R[xRows, yColumns] > Threshold:
         	#IMG_result(xRows, yColumns, :) = [0, 0, 255];   % Mark corner point by blue
-            IMG_result[xRows, yColumns] = (0, 0, 0, 255)
+            IMG_result[xRows, yColumns] = (0, 0, 255)
         	#IMG_map(xRows, yColumns, :) = 255;              % Mark corner point by white
             IMG_map[xRows, yColumns] = 255
         #end

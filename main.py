@@ -6,6 +6,10 @@
 ## Taipei, Taiwan
 ## yichongzeng@iii.org.tw
 
+# REFs:
+# https://www.codingame.com/playgrounds/38470/how-to-detect-circles-in-images
+# Find the curvature of the curve
+
 import numpy as np
 import cv2
 import imutils
@@ -25,7 +29,7 @@ from logo_pre_processing import LogoPreProcessing
 
 # Um spline é uma curva definida matematicamente por dois ou mais pontos de controle. 
 # Os pontos de controle que ficam na curva são chamados de nós.
-def _spline_curvature(x, y = None, error = 0.1):
+def _curvature_spline(x, y = None, error = 0.1):
     """
     Calculate the signed curvature of a 2D curve at each point
     using interpolating splines.
@@ -211,9 +215,9 @@ cv2.waitKey(0)
 #     * Difference of Gaussian
 
 # Finding x and y derivatives
-dy, dx = np.gradient(Ic)
+dx, dy = np.gradient(Ic)
 
-_spline_curvature(dy, dx, 0.0125)
+_curvature_spline(dx, dy, 0.0125)
 
 ######################################################
 # C - Virtual Edge Generation
