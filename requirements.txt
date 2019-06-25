@@ -1,5 +1,3 @@
-setuptools
-sip
 NumPy
 pandas
 Pillow

@@ -189,6 +189,7 @@ cv2.waitKey(0)
 
 # [8] Wikipedia: Curvature, [online]
 # https://en.wikipedia.org/wiki/Curvature
+# k = - (-2*Lx*Lxy*Ly + Lxx*Ly^2 + Lyy*Lx^2 ) / ((Lx^2 + Ly^2)^(3/2))
 
 # where k is curvature. The denotations x' and x'' are, respectively, 
 # first-order differential of x and 
@@ -215,9 +216,12 @@ cv2.waitKey(0)
 #     * Difference of Gaussian
 
 # Finding x and y derivatives
-dx, dy = np.gradient(Ic)
+#dx, dy = np.gradient(Ic)
+# find where the black pixels are
+points = np.argwhere(Ic == 0)
 
-_curvature_spline(dx, dy, 0.0125)
+for x, y in points[:50]:
+    _curvature_spline(x, y, 0.0125)
 
 ######################################################
 # C - Virtual Edge Generation
