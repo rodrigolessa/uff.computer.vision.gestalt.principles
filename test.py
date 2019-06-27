@@ -30,7 +30,7 @@ print(a)
 
 # Python: cv2.approxPolyDP(curve, epsilon, closed[, approxCurve]) → approxCurve
 
-for x, y in points[:500]:
+for x, y in points[:100]:
     original[x, y] = (0, 0, 255)
 
 cv2.imshow('arcLength', original)

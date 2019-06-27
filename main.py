@@ -9,6 +9,9 @@
 # REFs:
 # https://www.codingame.com/playgrounds/38470/how-to-detect-circles-in-images
 # Find the curvature of the curve
+# Cited article
+# Automatic Detections of Nipple and Pectoralis Major in Mammographic Images
+
 
 import numpy as np
 import cv2
@@ -54,8 +57,8 @@ def _curvature_spline(x, y = None, error = 0.1):
     """
 
     # handle list of complex case
-    if y is None:
-        x, y = x.real, x.imag
+    #if y is None:
+        #x, y = x.real, x.imag
 
     t = np.arange(x.shape[0])
     std = error * np.ones_like(x)
@@ -74,9 +77,9 @@ def _curvature_spline(x, y = None, error = 0.1):
 
 ######################################################
 # Initial Parameters
-imageName = 'gestalt-triangle-630x659.jpg'
-imageSize = 300
-imageBorderSize = 50
+imageName = 'test.png' #'gestalt_triangle.png' #gestalt-triangle-630x659.jpg'
+imageSize = 180
+imageBorderSize = 5
 
 # Instantiate preprocessing functions
 lpp = LogoPreProcessing(imageName, imageSize, imageBorderSize, False)
@@ -218,10 +221,18 @@ cv2.waitKey(0)
 # Finding x and y derivatives
 #dx, dy = np.gradient(Ic)
 # find where the black pixels are
-points = np.argwhere(Ic == 0)
+gray = np.float32(normalized)
+#points = np.argwhere(Ic == 0)
 
-for x, y in points[:50]:
-    _curvature_spline(x, y, 0.0125)
+#for x, y in points[:50]:
+
+#x = np.array([0, 1, 2, 3])
+#y = np.array([0.1, 0.2, 0.9, 2.1])
+x=np.arange(0,4)
+y=np.array([0,1,1.9,3.1])
+print(np.round(np.polyfit(x,y,1)))
+
+_curvature_spline(x, y)
 
 ######################################################
 # C - Virtual Edge Generation
@@ -229,7 +240,7 @@ for x, y in points[:50]:
 # In order to determine relationship between two edges, the
 # proposed scheme utilizes approximate line and approximate
 # ellipse/circle to edges. Let x[n] and y[n] be, respectively,
-# coordinates of x-direction and y-direction, and 0  x[n], y[n] 1.
+# coordinates of x-direction and y-direction, and 0 >= x[n], y[n] <= 1.
 # Approximate line is formulated as c1x[n]+c2y[n]=1, and two
 # parameters c1 and c2 are estimated by
 
@@ -237,14 +248,14 @@ for x, y in points[:50]:
 # between original coordinate and transferred coordinate (namely,
 # xt[n] and yt[n]) is calculated according to
 
-# where xt[n]=(1c2y[n])/c1 and yt[n]=(1c1x[n])/c2. As ε<τ2, a
+# where xt[n]=(1-c2y[n])/c1 and yt[n]=(1-c1x[n])/c2. As eps < τ2, a
 # virtual edge connects two edges as a line
 
 # Approximate ellipse/circle is formulated as
 # d1x2[n]+d2y2[n]+d3x[n]+d4y[n]=1, and four parameters d1, d2, d3
 # and d4 are estimated by,
 
-# As 4d1d2<0, approximate ellipse/circle is available.
+# As -4d1d2<0, approximate ellipse/circle is available.
 # Similarly, average error between original coordinate and
 # transferred coordinate is computed by (4), and transferred
 # coordinate is defined as follows

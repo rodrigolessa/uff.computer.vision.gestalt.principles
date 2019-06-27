@@ -14,7 +14,7 @@ k = 0.12
 
 #IMG = imread('stars.jpg');                  % read source JPEG image into 3D array
 #IMG = cv2.imread('referencias\\stars.jpg')
-IMG = cv2.imread('referencias\\boundaries.png')
+IMG = cv2.imread('test.png')
 #IMG_hsv = rgb2hsv(IMG);                     % convert image from RGB to HSV
 
 #IMG_hsv_value = IMG_hsv(:,:,3);             % gray scale value

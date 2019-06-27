@@ -23,9 +23,6 @@ for r in range(rmin, rmax + 1):
     for t in range(steps):
         points.append((r, int(r * cos(2 * pi * t / steps)), int(r * sin(2 * pi * t / steps))))
 
-#print('points')
-#print(points)
-
 acc = defaultdict(int)
 for x, y in canny_edge_detector(input_image):
     for r, dx, dy in points:
