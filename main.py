@@ -12,7 +12,6 @@
 # Cited article
 # Automatic Detections of Nipple and Pectoralis Major in Mammographic Images
 
-
 import numpy as np
 import cv2
 import imutils
@@ -29,53 +28,6 @@ from logo_pre_processing import LogoPreProcessing
 # straight line, ellipse, or circle. Phases of the project:
 
 ######################################################
-
-# Um spline é uma curva definida matematicamente por dois ou mais pontos de controle. 
-# Os pontos de controle que ficam na curva são chamados de nós.
-def _curvature_spline(x, y = None, error = 0.1):
-    """
-    Calculate the signed curvature of a 2D curve at each point
-    using interpolating splines.
-
-    Parameters
-    ----------
-    x, y: numpy.array(dtype = float) shape (n_points, )
-         or
-         y = None and
-         x is a numpy.array(dtype=complex) shape (n_points, )
-         In the second case the curve is represented as a np.array
-         of complex numbers.
-    error : float
-        The admisible error when interpolating the splines
-    
-    Returns
-    -------
-    curvature: numpy.array shape (n_points, )
-    
-    Note: This is 2-3x slower (1.8 ms for 2000 points) than `curvature_gradient`
-    but more accurate, especially at the borders.
-    """
-
-    # handle list of complex case
-    #if y is None:
-        #x, y = x.real, x.imag
-
-    t = np.arange(x.shape[0])
-    std = error * np.ones_like(x)
-
-    fx = UnivariateSpline(t, x, k=4, w=1 / np.sqrt(std))
-    fy = UnivariateSpline(t, y, k=4, w=1 / np.sqrt(std))
-
-    xl = fx.derivative(1)(t)
-    xl2 = fx.derivative(2)(t)
-    yl = fy.derivative(1)(t)
-    yl2 = fy.derivative(2)(t)
-    
-    curvature = (xl * yl2 - yl * xl2) / np.power(xl ** 2 + yl ** 2, 3/2)
-
-    return curvature
-
-######################################################
 # Initial Parameters
 imageName = 'test.png' #'gestalt_triangle.png' #gestalt-triangle-630x659.jpg'
 imageSize = 180
@@ -85,35 +37,31 @@ imageBorderSize = 5
 lpp = LogoPreProcessing(imageName, imageSize, imageBorderSize, False)
 
 # Load the image
-normalized = lpp.normalize
+normalized = lpp.normalize()
 
-# Crop and get only important shape from image
-# Centralizar o logo na imagem deixando somente 
-# a área da imagem que possui forma
-normalized = lpp.crop(normalized)
-
-# Resize and add border
-normalized = lpp.scale(normalized)
+# Convert it to grayscale
+# ! O próprio artigo não considera as cores ou outras camadas da imagem.
+grayscale = cv2.cvtColor(normalized, cv2.COLOR_BGR2GRAY)
 
 # Flip values
-# Nossa imagem de teste possui fundo preto, então invertemos para ficar igual ao artigo:
+# ! Nossa imagem de teste possui fundo preto, então invertemos para ficar igual ao artigo:
 # Flip the values of the pixels 
 # (black pixels are turned to white, and white pixels to black)
-flipped = cv2.bitwise_not(normalized)
+grayscale = cv2.bitwise_not(grayscale)
 
 # Binarization
-binaryImg = flipped.copy()
-
+binary = grayscale.copy()
 # Esse pre-processamento termina transformando a imagem em binária, 
 # pois o artigo só considera isso como entrada para o processo abordado.
 # Any pixel with a value greater than zero (black) is set to 255 (white)
-binaryImg[binaryImg > 0] = 255
+binary[binary > 0] = 255
+# Ou obter o thresholder com OpenCV + Otsu
 
 # Debugging: Show the original image
-debug1 = np.hstack((normalized, flipped, binaryImg))
+debug1 = np.hstack((grayscale, binary))
 
-cv2.imshow("Preprocessing: Resize + Bitwise + Binarization", debug1)
-cv2.waitKey(0)
+cv2.imshow("Preprocessing: Bitwise + Binarization", debug1)
+#cv2.waitKey(0)
 
 # Accessing Image Properties
 # Image properties include number of rows, columns and channels, 
@@ -121,6 +69,8 @@ cv2.waitKey(0)
 # Returns a tuple of number of rows, columns and channels (if is color)
 outlineBase = np.zeros(normalized.shape, dtype = "uint8")
 
+print('')
+print(' - shape size:' + str(outlineBase.shape))
 
 ######################################################
 # A - Edge and Boundary Detection
@@ -147,20 +97,20 @@ kernel = np.ones((3, 3), np.uint8)
 # https://homepages.inf.ed.ac.uk/rbf/HIPR2/erode.htm
 # Redução das bordas do objeto. Consegue eliminar objetos 
 # muito pequenos mantendo somente pixels de elementos estruturantes.
-erosion = cv2.erode(binaryImg, kernel, iterations = 1)
+erosion = cv2.erode(binary, kernel, iterations = 1)
 
 # 2 - Dilation: Expanding the foreground
 # https://homepages.inf.ed.ac.uk/rbf/HIPR2/dilate.htm
 # Expandir as bordas do objeto, podendo preencher pixels faltantes.
 # Completar a imagem com um objeto estruturante.
-dilation = cv2.dilate(binaryImg, kernel, iterations = 1)
+dilation = cv2.dilate(binary, kernel, iterations = 1)
 
 # Teste: gradient = cv2.bitwise_not(cv2.morphologyEx(binaryImg, cv2.MORPH_GRADIENT, kernel))
 
 # The function Phi(I) generate the result by applying
 # erosion operation or dilation operation to I.
 #Ic = cv2.subtract(binaryImg, dilation) # for negative values
-Ic = cv2.bitwise_not(binaryImg - erosion)
+Ic = cv2.bitwise_not(binary - erosion)
 
 # TODO: Verificar se a imagem do resultado da erosão possui limiar
 # senão aplicar dilatação
@@ -171,15 +121,8 @@ Ic = cv2.bitwise_not(binaryImg - erosion)
 # Debugging: Show the original binary image and its boundary
 debug2 = np.hstack((erosion, dilation, Ic))
 
-#(cnts, hierarchy) = cv2.findContours(Ic.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-#for c in cnts[:2]:
-#    print(c)
-#    cv2.drawContours(outlineBase, [c], -1, (255, 255, 255), 2)
-#cv2.imshow("outlineBase", outlineBase)
-
 cv2.imshow("Morphological Transformations: erode + dilation + I - Phi(I)", debug2)
-cv2.waitKey(0)
-
+#cv2.waitKey(0)
 
 ######################################################
 # B - Key Vertex Detection
@@ -217,22 +160,6 @@ cv2.waitKey(0)
 #     * Laplacian
 #     * Laplacian of Gaussian
 #     * Difference of Gaussian
-
-# Finding x and y derivatives
-#dx, dy = np.gradient(Ic)
-# find where the black pixels are
-gray = np.float32(normalized)
-#points = np.argwhere(Ic == 0)
-
-#for x, y in points[:50]:
-
-#x = np.array([0, 1, 2, 3])
-#y = np.array([0.1, 0.2, 0.9, 2.1])
-x=np.arange(0,4)
-y=np.array([0,1,1.9,3.1])
-print(np.round(np.polyfit(x,y,1)))
-
-_curvature_spline(x, y)
 
 ######################################################
 # C - Virtual Edge Generation
@@ -286,7 +213,7 @@ _curvature_spline(x, y)
 # 2. Second work
 # detect polygon with closured contours
 
-
 #cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
 
+cv2.waitKey(0)
 cv2.destroyAllWindows()

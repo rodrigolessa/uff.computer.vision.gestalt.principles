@@ -35,3 +35,23 @@ for x, y in points[:100]:
 
 cv2.imshow('arcLength', original)
 cv2.waitKey(0)
+
+
+# Mahotas
+# def circle_se(radius):
+#     '''
+#     circle = circle_se(radius)
+#     Build a circular structuring element of a given radius
+#     Parameters
+#     ----------
+#     radius : int
+#         Radius of circle
+#     Returns
+#     -------
+#     circle : boolean ndarray
+#     '''
+#     if not (radius > 0):
+#         raise ValueError('mahotas.morph.circle: radius must be positive')
+#     X = np.arange(-radius, +radius+1)
+#     X,Y = np.meshgrid(X,X)
+#     return (X**2 + Y**2) < radius**2
