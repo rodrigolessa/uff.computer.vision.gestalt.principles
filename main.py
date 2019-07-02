@@ -29,7 +29,7 @@ from logo_pre_processing import LogoPreProcessing
 
 ######################################################
 # Initial Parameters
-imageName = 'test.png' #'gestalt_triangle.png' #gestalt-triangle-630x659.jpg'
+imageName = 'test.png'
 imageSize = 180
 imageBorderSize = 5
 
