@@ -9,7 +9,7 @@ import cv2
 # is performed in the Hough space. The local maxima in the Hough space 
 # gives the circles. A threshold is used to identify qualifying local maxima's.
 
-img = cv2.imread('erode.png')
+img = cv2.imread('test.png')
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 #edges = cv2.Canny(gray, 50, 150, apertureSize = 3)
 edges = gray.copy()

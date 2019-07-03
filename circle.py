@@ -5,7 +5,7 @@ from collections import defaultdict
 
 # Load image:
 #input_image = Image.open("test.png")
-input_image = Image.open("harris.png")
+input_image = Image.open("test.png")
 
 # Output image:
 output_image = Image.new("RGB", input_image.size)

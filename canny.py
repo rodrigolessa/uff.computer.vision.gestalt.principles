@@ -21,6 +21,8 @@ def canny_edge_detector(input_image):
     # Filter out some edges
     keep = filter_strong_edges(gradient, width, height, 20, 25)
 
+    #print(keep)
+
     return keep
 
 

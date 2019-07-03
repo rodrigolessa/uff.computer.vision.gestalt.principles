@@ -32,15 +32,14 @@ edges = np.zeros(img.shape)
 
 edges[dst > threshold * dst.max()] = [255,255,255]
 
-cv2.imshow("edges", edges)
-
 # Erosion: Shrinking the foreground
 # https://homepages.inf.ed.ac.uk/rbf/HIPR2/erode.htm
 # Redução das bordas do objeto. Consegue eliminar objetos 
 # muito pequenos mantendo somente pixels de elementos estruturantes.
-# edges = cv2.erode(edges, kernel, iterations = 1)
+edges = cv2.erode(edges, kernel, iterations = 1)
 
 #cv2.imwrite('erode.png', cornerErosion)
+cv2.imshow("edges", edges)
 
 # # from matplotlib import pyplot as plt
 # plt.subplot(121)
