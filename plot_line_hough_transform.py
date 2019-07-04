@@ -57,23 +57,32 @@ References
 """
 import numpy as np
 
-from skimage.transform import (hough_line, hough_line_peaks,
-                               probabilistic_hough_line)
-from skimage.feature import canny
 from skimage import data, io
-
-import matplotlib.pyplot as plt
+from skimage.transform import (hough_line, hough_line_peaks,probabilistic_hough_line)
+from skimage.feature import canny
+from skimage.viewer import ImageViewer
 from matplotlib import cm
-
+import matplotlib.pyplot as plt
 
 # Constructing test image
-image = np.zeros((100, 100))
-idx = np.arange(25, 75)
-image[idx[::-1], idx] = 255
-image[idx, idx] = 255
+# # image = np.zeros((100, 100))
+# # idx = np.arange(25, 75)
+# # image[idx[::-1], idx] = 255
+# # image[idx, idx] = 255
+
+image = io.imread('test2.png', as_gray=True)
 
 # Classic straight-line Hough transform
+# hspace : 2-D ndarray of uint64 Hough transform accumulator.
+# angles : ndarray Angles at which the transform is computed, in radians.
+# distances : ndarray Distance values.
 h, theta, d = hough_line(image)
+
+print(h)
+print(theta)
+print(d)
+
+io.imshow(h)
 
 # Generating figure 1
 fig, axes = plt.subplots(1, 3, figsize=(15, 6))
@@ -100,52 +109,6 @@ ax[2].set_xlim((0, image.shape[1]))
 ax[2].set_ylim((image.shape[0], 0))
 ax[2].set_axis_off()
 ax[2].set_title('Detected lines')
-
-plt.tight_layout()
-plt.show()
-
-# Line finding using the Probabilistic Hough Transform
-#image = data.camera()
-#image = io.imread('test.png', True)
-#edges = canny(image, 2, 1, 25)
-
-import cv2
-
-image = cv2.imread('test.png')
-# gray scale value
-grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-kernel = np.ones((3, 3), np.uint8)
-
-erode = cv2.erode(grayscale, kernel, iterations = 1)
-
-edges = grayscale - erode
-
-cv2.imshow("I - Phi(I)", edges)
-cv2.waitKey(0)
-
-lines = probabilistic_hough_line(edges, threshold=10, line_length=5, line_gap=3)
-
-# Generating figure 2
-fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True, sharey=True)
-ax = axes.ravel()
-
-ax[0].imshow(image, cmap=cm.gray)
-ax[0].set_title('Input image')
-
-ax[1].imshow(edges, cmap=cm.gray)
-ax[1].set_title('Canny edges')
-
-ax[2].imshow(edges * 0)
-for line in lines:
-    p0, p1 = line
-    ax[2].plot((p0[0], p1[0]), (p0[1], p1[1]))
-ax[2].set_xlim((0, image.shape[1]))
-ax[2].set_ylim((image.shape[0], 0))
-ax[2].set_title('Probabilistic Hough')
-
-for a in ax:
-    a.set_axis_off()
 
 plt.tight_layout()
 plt.show()

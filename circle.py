@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 from math import sqrt, pi, cos, sin
-from canny import canny_edge_detector
+from logo_features import canny_edge_detector
 from collections import defaultdict
 
 # Load image:

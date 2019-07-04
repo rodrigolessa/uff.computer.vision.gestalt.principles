@@ -9,20 +9,18 @@ import cv2
 # is performed in the Hough space. The local maxima in the Hough space 
 # gives the circles. A threshold is used to identify qualifying local maxima's.
 
-img = cv2.imread('test.png')
-gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+img = cv2.imread('test2.png', 0)
+#gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 #edges = cv2.Canny(gray, 50, 150, apertureSize = 3)
-edges = gray.copy()
+#edges = gray.copy()
 #edges = cv2.bitwise_not(edges)
-
-cv2.imshow('canny', edges)
-cv2.waitKey(0)
+#cv2.imshow('canny', edges)
+#cv2.waitKey(0)
+imgLines = img.copy()
 
 # Houge Transforme
 
-imgLines = img.copy()
-
-lines = cv2.HoughLines(edges,1,np.pi/180, 200)
+lines = cv2.HoughLines(img, 1 , np.pi / 180, 200)
 for l in lines[:10]:
     for rho, theta in l:
         a = np.cos(theta)

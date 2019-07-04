@@ -5,11 +5,8 @@ import cv2
 import imutils
 import os
 
-debugging = False
-
 clear = lambda: os.system('cls')
 clear()
-
 
 class CurvatureDefinition:
 
@@ -34,14 +31,7 @@ class CurvatureDefinition:
         Returns
         -------
         curvature: numpy.array shape (n_points, )
-
-        Note: This is 2-3x slower (1.8 ms for 2000 points) than `curvature_gradient`
-        but more accurate, especially at the borders.
         """
-
-        # handle list of complex case
-        #if y is None:
-        #x, y = x.real, x.imag
 
         # create range for array length
         t = np.arange(x.shape[0])
@@ -58,8 +48,6 @@ class CurvatureDefinition:
         curvature = (xl * yl2 - yl * xl2) / np.power(xl ** 2 + yl ** 2, 3/2)
 
         return curvature
-
-
 
 ##########################################################
 
@@ -89,9 +77,8 @@ edges = dilation - threshold
 
 #edges = cv2.dilate(edges, kernel, iterations = 1)
 
-if debugging == True:
-    cv2.imshow('edges', edges)
-    cv2.waitKey(0)
+cv2.imshow('edges', edges)
+cv2.waitKey(0)
 
 print('binary image matrix')
 print(edges)
@@ -160,7 +147,6 @@ spl = UnivariateSpline(x, y, w=~w)
 
 #y = np.exp(-x**2) + 0.1 * np.random.randn(50)
 
-
 points = np.argwhere(edges == 255)
 print('argwhere 255')
 print(points)
@@ -210,7 +196,6 @@ y__ = 1 #fy.derivative(2)(t)
 curv = (x_ * y__ - y_ * x__) / np.power(x_ ** 2 + y_ ** 2, 3/2)
 
 #print(curv)
-
 
 import matplotlib.pyplot as plt
 N = 8

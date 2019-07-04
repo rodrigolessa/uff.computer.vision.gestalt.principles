@@ -6,12 +6,6 @@
 ## Taipei, Taiwan
 ## yichongzeng@iii.org.tw
 
-# REFs:
-# https://www.codingame.com/playgrounds/38470/how-to-detect-circles-in-images
-# Find the curvature of the curve
-# Cited article
-# Automatic Detections of Nipple and Pectoralis Major in Mammographic Images
-
 import numpy as np
 import cv2
 import imutils
@@ -30,7 +24,7 @@ from logo_pre_processing import LogoPreProcessing
 ######################################################
 # Initial Parameters
 imageName = 'test.png'
-imageSize = 180
+imageSize = 200
 imageBorderSize = 5
 
 # Instantiate preprocessing functions
@@ -109,14 +103,14 @@ dilation = cv2.dilate(binary, kernel, iterations = 1)
 
 # The function Phi(I) generate the result by applying
 # erosion operation or dilation operation to I.
-#Ic = cv2.subtract(binaryImg, dilation) # for negative values
-Ic = cv2.bitwise_not(binary - erosion)
+#Ic = cv2.bitwise_not(binary - erosion)
+Ic = cv2.subtract(binary, erosion) # for negative values
 
 # TODO: Verificar se a imagem do resultado da erosão possui limiar
 # senão aplicar dilatação
 
 # Write a image for documentation
-#cv2.imwrite("boundaries.png", Ic)
+cv2.imwrite("resultado_erosao.png", Ic)
 
 # Debugging: Show the original binary image and its boundary
 debug2 = np.hstack((erosion, dilation, Ic))

@@ -1,7 +1,6 @@
 import numpy as np
-import cv2
 import imutils
-from logo_pre_processing import LogoPreProcessing
+import cv2
 
 # https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_gradients/py_gradients.html
 
@@ -14,6 +13,7 @@ def findGradients(img):
     return I_x, I_y
 
 src = cv2.imread('test.png', 0)
+
 blockSize = 3
 
 print("Gradient Matrix")
@@ -25,7 +25,6 @@ scored_image_gradient = np.zeros(src.shape)
 
 # http://stackoverflow.com/q/11331830/
 gradient_x, gradient_y = findGradients(src)
-
 gradient_xx = np.square(gradient_x)
 gradient_yy = np.square(gradient_y)
 gradient_xy = np.multiply(gradient_x, gradient_y)
