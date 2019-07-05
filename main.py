@@ -1,16 +1,20 @@
-# Reprodução do Artigo:
-## Decomposition and Construction of Object Based on Law of Closure in Gestalt Psychology
-## Yi-Chong Zeng
-## Data Analytics Technology and Applications Research Institute
-## Institute for Information Industry
-## Taipei, Taiwan
-## yichongzeng@iii.org.tw
+"""
+Reprodução do Artigo:
+
+Decomposition and Construction of Object Based on Law of Closure in Gestalt Psychology
+ Yi-Chong Zeng
+ Data Analytics Technology and Applications Research Institute
+ Institute for Information Industry
+ Taipei, Taiwan
+ yichongzeng@iii.org.tw
+
+"""
 
 import numpy as np
 import cv2
 import imutils
 from scipy.interpolate import UnivariateSpline
-from logo_pre_processing import LogoPreProcessing
+from logo_pre_processamento import LogoPreProcessamento
 
 # GOAL:
 # A method to implement object reification based on 
@@ -28,7 +32,7 @@ imageSize = 200
 imageBorderSize = 5
 
 # Instantiate preprocessing functions
-lpp = LogoPreProcessing(imageName, imageSize, imageBorderSize, False)
+lpp = LogoPreProcessamento(imageName, imageSize, imageBorderSize, False)
 
 # Load the image
 normalized = lpp.normalize()

@@ -222,49 +222,49 @@ def calcCurvatureGraphWRTTransformations(shape, pointIdx):
     
     return result
 
-function getMin2(inresult1, inresult2):
-    var x0 = [1.0, .1, .1]
+def getMin2(inresult1, inresult2):
 
-    var startX = inresult1[0].x
-    var endX = inresult1[inresult1.length - 1].x
+    x0 = [1.0, .1, .1]
+
+    startX = inresult1[0].x
+    endX = inresult1[inresult1.length - 1].x
     inputRes1Fx.fx = toArcLengthSpline_monotonicallyIncreasingX(inresult1)
     inputRes1Fx.startX = startX
     inputRes1Fx.endX = endX
 
-    var startX = inresult2[0].x
-    var endX = inresult2[inresult2.length - 1].x
-    inputRes2Fx.fx = toArcLengthSpline_monotonicallyIncreasingX(inresult2)//FIXME: no need for this each time
+    startX = inresult2[0].x
+    endX = inresult2[inresult2.length - 1].x
+    inputRes2Fx.fx = toArcLengthSpline_monotonicallyIncreasingX(inresult2)
     inputRes2Fx.startX = startX
     inputRes2Fx.endX = endX
 
-    var solution = nelderMead(functionToMin, x0, {maxIterations: 100})
+    solution = nelderMead(functionToMin, x0, {maxIterations: 100})
     return solution
 
 def generateAllTheInfo(shape, pointIdx):
     g_shape1 = shape
     g_shape2 = shape
 
-    var scale = 2.0
-    var cntPntTemp = getCenterPointOfShape_float(convertKeypointsToMatrixKeypoints(g_shape2))
-    var cntPnt = {
-        x: cntPntTemp[0],
-        y: cntPntTemp[1]
-    }
-    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getTranslateMatrix(-cntPnt.x, -cntPnt.y))
-    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getScaleMatrix(Math.sqrt(scale), 1/Math.sqrt(scale)))
-    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getTranslateMatrix( cntPnt.x,  cntPnt.y))
+    scale = 2.0
+    cntPntTemp = getCenterPointOfShape_float(convertKeypointsToMatrixKeypoints(g_shape2))
+    # cntPnt = {
+    #     x: cntPntTemp[0],
+    #     y: cntPntTemp[1]
+    # }
+    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getTranslateMatrix(-cntPntTemp[0], -cntPntTemp[1]))
+    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getScaleMatrix(math.sqrt(scale), 1/math.sqrt(scale)))
+    g_shape1 = applyTransformationMatrixToAllKeypointsObjects(g_shape1, getTranslateMatrix( cntPntTemp[0],  cntPntTemp[1]))
 
+    inresult1 = calcCurvatureWithSplinesAtTVal(g_shape1, pointIdx, None)
 
-    var inresult1 = calcCurvatureWithSplinesAtTVal(g_shape1, keypoint1Idx)
-
-    for (var i = 1/*skip first point*/ i < g_shape1.length - 1 i += 1):
-        inresult2 = calcCurvatureWithSplinesAtTVal(g_shape2, i)
+    for i in range(1, g_shape1.length - 1):
+        inresult2 = calcCurvatureWithSplinesAtTVal(g_shape2, i, None)
 
         g_min = getMin2(inresult1, inresult2)
         console.log("Check: " + i + " - " + g_min.fx)
 
         if g_min.fx < 0.01 :
             g_foundKeypoints.push(g_shape2[i])
-            print "found: " + str(i)
+            print("found: " + str(i))
 
-print generateAllTheInfo(lissajousCurve(), 5)
+print(generateAllTheInfo(lissajousCurve(), 5))

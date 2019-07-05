@@ -2,7 +2,7 @@
 import cv2
 import imutils
 
-class LogoPreProcessing:
+class LogoPreProcessamento:
 
 	def __init__(self, path, size, borderSize, whiteBackground = False):
 		# Default definitions of our images test

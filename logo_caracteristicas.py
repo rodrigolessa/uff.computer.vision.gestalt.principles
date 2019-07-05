@@ -37,10 +37,10 @@ def compute_blur(input_pixels, width, height):
         [1 / 256,  4 / 256,  6 / 256,  4 / 256, 1 / 256]
     ])
 
-    # Middle of the kernel
+    # Meio
     offset = len(kernel) // 2
 
-    # Compute the blurred image
+    # Calcular suavização usando o tamanho do kernel
     blurred = np.empty((width, height))
     for x in range(width):
         for y in range(height):
@@ -86,14 +86,15 @@ def filter_out_non_maximum(gradient, direction, width, height):
 
 # 4. Utilizar limiar duplo e análise de conectividade para detectar e encadear bordas
 def filter_strong_edges(gradient, width, height, low, high):
-    # Keep strong edges
+    # Manter os valores maiores que nosso limite de "25"
     keep = set()
     for x in range(width):
         for y in range(height):
             if gradient[x, y] > high:
                 keep.add((x, y))
 
-    # Keep weak edges next to a pixel to keep
+    # Atualizar com os pontos que estão próximos aos pontos limites 
+    # e ainda são maiores que nosso mínimo parametrizado
     lastiter = keep
     while lastiter:
         newkeep = set()
@@ -113,11 +114,7 @@ def filter_strong_edges(gradient, width, height, low, high):
 # 2. Calcular a direção e magnitude do gradiente da imagem suavizada
 # 3. Aplicar supressão dos não-máximos (non-maxima suppression)
 # 4. Utilizar limiar duplo e análise de conectividade para detectar e encadear bordas
-def canny_edge_detector(input_image):
-
-    input_pixels = input_image.load()
-    width = input_image.width
-    height = input_image.height
+def obter_bordas(input_pixels, width, height):
 
     # Transformar a imagem em uma matriz 2D com cinza
     grayscaled = compute_grayscale(input_pixels, width, height)
