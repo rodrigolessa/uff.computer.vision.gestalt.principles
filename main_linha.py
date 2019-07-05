@@ -31,6 +31,9 @@ for _, angle, dist in zip(*hough_line_peaks(h, theta, d)):
 
 #io.imshow(image)
 
+# TODO: Preencher o novo contorno da imagem
+# TODO: Provocar ums erosão para manter somente a nova forma
+
 #img = np.zeros((10, 10), dtype=np.uint8)
 #rr, cc = draw.line(1, 1, 8, 8)
 #img[rr, cc] = 1
